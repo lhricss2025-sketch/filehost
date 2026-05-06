@@ -1326,11 +1326,14 @@ Contact @senzo_support for assistance
 
 # ==================== MAIN ====================
 
-async def main():
-    """Start the bot"""
+async def post_init(application: Application) -> None:
+    """Post-init hook: runs inside the event loop managed by run_polling()"""
     await init_db()
-    
-    application = Application.builder().token(BOT_TOKEN).build()
+
+
+def main():
+    """Start the bot"""
+    application = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
     
     # Command handlers
     application.add_handler(CommandHandler("start", start_command))
@@ -1355,9 +1358,8 @@ async def main():
     ))
     
     logger.info(f"🚀 Senzo Bot Started! Admin: {ADMIN_ID}")
-    await application.run_polling()
+    application.run_polling()
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()
