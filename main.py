@@ -704,13 +704,15 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ==================== MAIN ====================
 
-async def main():
-    """Start the bot"""
-    # Initialize database
+async def post_init(application: Application) -> None:
+    """Run async initialisation after the Application is built."""
     await init_db()
-    
-    # Create application
-    application = Application.builder().token(BOT_TOKEN).build()
+
+
+def main():
+    """Start the bot"""
+    # Create application, running init_db via post_init before polling begins
+    application = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
     
     # Add command handlers
     application.add_handler(CommandHandler("admin", admin_command))
@@ -726,11 +728,10 @@ async def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_refs_input))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_channels_input))
     
-    # Start bot
+    # Start bot — run_polling() manages its own event loop internally
     logger.info("Bot started!")
-    await application.run_polling()
+    application.run_polling()
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()
