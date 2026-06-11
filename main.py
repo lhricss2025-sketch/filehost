@@ -20,6 +20,7 @@ Platform  : Railway / Any hosting
 import asyncio
 import aiohttp
 import logging
+import os
 import random
 import string
 from datetime import datetime, timedelta
@@ -45,8 +46,8 @@ ADMIN_ID   = 8105949422
 
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
-TURSO_URL   = "libsql://hosting-bot-filehosting.aws-ap-south-1.turso.io"
-TURSO_TOKEN = "YOUR_TURSO_AUTH_TOKEN"
+TURSO_URL   = "libsql://hosting-bot-filehosting.aws-ap-south-1.turso.io:443"
+TURSO_TOKEN = os.getenv("TURSO_TOKEN", "")
 
 CREDITS_PER_REFERRAL = 5
 
