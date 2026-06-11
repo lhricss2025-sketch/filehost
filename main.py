@@ -20,7 +20,6 @@ Platform  : Railway / Any hosting
 import asyncio
 import aiohttp
 import logging
-import os
 import random
 import string
 from datetime import datetime, timedelta
@@ -47,7 +46,7 @@ ADMIN_ID   = 8105949422
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
 TURSO_URL   = "https://hosting-bot-filehosting.aws-ap-south-1.turso.io"
-TURSO_TOKEN = os.getenv("YOUR_TURSO_AUTH_TOKEN", "")
+TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODExNjA0OTQsImlkIjoiMDE5ZWFiMmMtM2YwMS03ZGUwLWFiMTEtMGZhODBjYzc0Yjk0IiwicmlkIjoiNGRjZWRjYjEtZWMyMC00MWU1LTk1ZTItZDRjZWIzNjM0YjFkIn0.FJ82icyxhrOldS1OuT3RIfvs-L2Eg74y7ftfx_wuGvROR5bubLL_msczMdf82UPDRjz_znASbpHFrDHmOWBeBQ"
 
 CREDITS_PER_REFERRAL = 5
 
@@ -101,7 +100,7 @@ class TursoDB:
     async def _pipeline(self, requests: list) -> list:
         reqs = list(requests) + [{"type": "close"}]
         sess = await self._get_session()
-        async with sess.post(self._url, json={"requests": reqs}, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+        async with sess.post(self._url, json={"requests": reqs}) as resp:
             resp.raise_for_status()
             data = await resp.json()
         results = []
