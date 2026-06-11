@@ -46,7 +46,7 @@ ADMIN_ID   = 8105949422
 
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
-TURSO_URL   = "libsql://hosting-bot-filehosting.aws-ap-south-1.turso.io:443"
+TURSO_URL   = "https://hosting-bot-filehosting.aws-ap-south-1.turso.io"
 TURSO_TOKEN = os.getenv("TURSO_TOKEN", "")
 
 CREDITS_PER_REFERRAL = 5
@@ -101,7 +101,7 @@ class TursoDB:
     async def _pipeline(self, requests: list) -> list:
         reqs = list(requests) + [{"type": "close"}]
         sess = await self._get_session()
-        async with sess.post(self._url, json={"requests": reqs}) as resp:
+        async with sess.post(self._url, json={"requests": reqs}, timeout=aiohttp.ClientTimeout(total=30)) as resp:
             resp.raise_for_status()
             data = await resp.json()
         results = []
