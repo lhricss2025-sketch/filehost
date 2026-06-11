@@ -47,7 +47,7 @@ ADMIN_ID   = 8105949422
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
 TURSO_URL   = "https://hosting-bot-filehosting.aws-ap-south-1.turso.io"
-TURSO_TOKEN = os.getenv("TURSO_TOKEN", "")
+TURSO_TOKEN = os.getenv("YOUR_TURSO_AUTH_TOKEN", "")
 
 CREDITS_PER_REFERRAL = 5
 
