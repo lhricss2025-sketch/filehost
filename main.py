@@ -108,7 +108,7 @@ class TursoDB:
         for r in data.get("results", []):
             if r.get("type") == "error":
                 raise Exception(f"Turso error: {r.get('error', r)}")
-            results.append(r["response"]["result"])
+            results.append(r["response"].get("result", {}))
         return results
 
     def _to_rows(self, result: dict) -> list:
