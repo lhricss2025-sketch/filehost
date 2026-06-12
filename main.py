@@ -40,8 +40,8 @@ from telegram.error import BadRequest, Forbidden
 #                        CONFIGURATION
 # ═══════════════════════════════════════════════════════════════
 
-BOT_TOKEN  = "8863632618:AAHybJVTAKAGoLGrF9CP_SvYhdUwo8j_eQg"
-ADMIN_ID   = 8105949422
+BOT_TOKEN  = "8480004123:AAEmDVAia46G5ggfDqLDEIXNy5Zy4erXsOo"
+ADMIN_ID   = 6070145287
 
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
@@ -305,12 +305,13 @@ def extract_username_from_url(url: str) -> str:
     """
     Extract @username from a t.me URL for membership checking.
     https://t.me/mychannel  →  @mychannel
-    https://t.me/joinchat/xxx  →  keep full url (private, can't check — return empty)
+    https://t.me/joinchat/xxx  →  private link, return "" (can't check)
+    https://t.me/+xxxxx      →  private link, return "" (can't check)
     """
     url = url.strip().rstrip("/")
-    if "/joinchat/" in url or "+":
-        # private invite link — we can't check membership, just return marker
-        pass
+    # Private invite links — cannot check membership
+    if "/joinchat/" in url or "/+" in url:
+        return ""
     if "t.me/" in url:
         parts = url.split("t.me/")
         if len(parts) == 2:
