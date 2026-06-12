@@ -40,8 +40,8 @@ from telegram.error import BadRequest, Forbidden
 #                        CONFIGURATION
 # ═══════════════════════════════════════════════════════════════
 
-BOT_TOKEN  = "8480004123:AAEmDVAia46G5ggfDqLDEIXNy5Zy4erXsOo"
-ADMIN_ID   = 6070145287
+BOT_TOKEN  = "8863632618:AAHybJVTAKAGoLGrF9CP_SvYhdUwo8j_eQg"
+ADMIN_ID   = 8105949422
 
 # ── Turso Config ───────────────────────────────────────────────
 # Get from https://app.turso.tech → your DB → Connect
