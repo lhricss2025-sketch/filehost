@@ -86,6 +86,11 @@ class TursoDB:
             self._sess = aiohttp.ClientSession(headers=self._hdrs)
         return self._sess
 
+    async def close(self):
+        """Close the aiohttp session cleanly."""
+        if self._sess and not self._sess.closed:
+            await self._sess.close()
+
     @staticmethod
     def _arg(v) -> dict:
         if v is None:            return {"type": "null",    "value": None}
@@ -107,7 +112,10 @@ class TursoDB:
         for r in data.get("results", []):
             if r.get("type") == "error":
                 raise Exception(f"Turso error: {r.get('error', r)}")
-            results.append(r["response"]["result"])
+            # DDL (CREATE TABLE etc.) returns {"type":"ok","response":{}} — no "result" key
+            # DML (SELECT/INSERT etc.) returns {"type":"ok","response":{"result":{...}}}
+            response = r.get("response", {})
+            results.append(response.get("result", {"cols": [], "rows": []}))
         return results
 
     def _to_rows(self, result: dict) -> list:
@@ -1848,11 +1856,18 @@ async def post_init(application):
     logger.info("🚀 Senzo Premium Bot v6.0 started!")
 
 
+async def post_shutdown(application):
+    """Close aiohttp session cleanly on shutdown — fixes 'Unclosed client session' warning."""
+    await DB.close()
+    logger.info("DB session closed.")
+
+
 def main():
     app = (
         Application.builder()
         .token(BOT_TOKEN)
         .post_init(post_init)
+        .post_shutdown(post_shutdown)
         .build()
     )
 
